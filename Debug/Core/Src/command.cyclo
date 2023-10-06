@@ -1,1 +1,8 @@
-../Core/Src/command.c:11:9:processCommand	15
+../Core/Src/command.c:13:9:checkForStart	2
+../Core/Src/command.c:23:9:SCRAM	1
+../Core/Src/command.c:27:9:move_to_xyzr	1
+../Core/Src/command.c:31:9:vacuum_on	1
+../Core/Src/command.c:35:9:vacuum_off	1
+../Core/Src/command.c:39:9:reel_feeder	1
+../Core/Src/command.c:43:9:check_feeder_ready	1
+../Core/Src/command.c:47:9:processCommand	15

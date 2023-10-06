@@ -54,11 +54,12 @@ uint8_t PCH_flag =0;
 uint8_t END_flag =0;
 uint8_t t_code[16];
 uint8_t t_code_index;
-
+uint8_t start_flag =0;
 
 uint8_t uart_buffer[BUFFER_SIZE];
 volatile uint8_t read_ptr = 0;
 volatile uint8_t write_ptr = 0;
+
 
 
 /* USER CODE END PV */
@@ -149,12 +150,23 @@ int main(void)
 				  read_ptr ++;
 				  read_ptr %= BUFFER_SIZE;
 				  const char* t_code_str = (const char*)t_code;
-				  uint8_t opcode = processCommand(t_code_str,t_code_index);
-				  if( opcode == 11 ||opcode == 12){
-					  END_flag = 1;
+
+				  if(start_flag){
+					  uint8_t opcode = processCommand(t_code_str);
+					  if( opcode == 11 ||opcode == 12){
+						  END_flag = 1;
+					  }
+				  }else{
+					  if(checkForStart(t_code_str)){
+						  start_flag =1;
+					  }
+					  //check for startFlag
 				  }
+
+
+
+
 				  t_code_index =0;
-				  HAL_Delay(500);
 				  HAL_UART_Transmit(&huart2, ready_for_new_command, 5, 10);
 			  }else{
 
@@ -177,7 +189,7 @@ int main(void)
 	  //wait for next command
 	  PCH_flag = 0;
 	  END_flag = 0;
-
+	  start_flag =0;
 
 
 
