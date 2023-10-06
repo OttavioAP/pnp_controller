@@ -117,8 +117,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	    HAL_Delay(1000);
-	  	HAL_UART_Transmit(&huart2, MCUH, 5, 10);
+	   // HAL_Delay(1000);
+	    if(uart_buffer[0]){
+	    	HAL_UART_Transmit(&huart2, MCUH, 5, 10);
+	    }
+
 	  //wait for handshake until handshake received
 	  //after handshake, send mcu handshake until first part of command received
 	  //when newline received, process command
