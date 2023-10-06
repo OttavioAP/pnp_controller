@@ -1,11 +1,16 @@
 import serial
+import time
 
 # Define the COM port and baud rate
 com_port = 'COM7'
 baud_rate = 115200
 uart_handshake = False
+mcu_ready_for_command = False
 
 PC_HANDSHAKE = "PCH".encode('utf-8')
+
+message_list = ["com1\n".encode('utf-8'), "com2\n".encode('utf-8'), "END\n".encode('utf-8')]
+
 
 
 def send_uart_message(ser, message):
@@ -15,6 +20,8 @@ def send_uart_message(ser, message):
 try:
     # Open the serial port
     ser = serial.Serial(com_port, baud_rate, timeout=1)
+
+    send_uart_message(ser, PC_HANDSHAKE)
 
     while(not uart_handshake):
 
@@ -33,7 +40,35 @@ try:
             if(decoded_data == "MCUH\n"):
                 uart_handshake = True
         else:
-            send_uart_message(ser, PC_HANDSHAKE)
+            
+            time.sleep(0.1)
+
+
+    for message in message_list:
+
+        while(not mcu_ready_for_command):
+
+            received_data = ser.readline()  # Read a line of data (until '\n' or timeout)
+            
+            if received_data:
+                try:
+                    # Attempt to decode as UTF-8, falling back to Latin-1 if it fails
+                    decoded_data = received_data.decode('utf-8')
+                except UnicodeDecodeError:
+                    decoded_data = received_data.decode('latin-1', errors='replace')
+
+                # Echo the received data
+                print(decoded_data.strip())
+
+                if(decoded_data == "MCUR\n"):
+                    mcu_ready_for_command = True
+        send_uart_message(ser, message)
+        mcu_ready_for_command = False
+        
+
+
+
+
 
 
 

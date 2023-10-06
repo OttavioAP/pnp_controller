@@ -48,7 +48,13 @@ uint8_t rx_buffer[BUFFER_SIZE][16];
 uint8_t buffer_index;
 
 uint8_t ready[6] = "ready";
-uint8_t MCUH[5] = "MCUH\n";
+uint8_t MCUHANDSHAKE[5] = "MCUH\n";
+uint8_t ready_for_new_command[5]= "MCUR\n";
+uint8_t PCH_flag =0;
+uint8_t END_flag =0;
+
+uint8_t t_code[16];
+uint8_t t_code_index;
 
 uint8_t uart_buffer[BUFFER_SIZE];
 volatile uint8_t read_ptr = 0;
@@ -68,12 +74,30 @@ static void MX_USART2_UART_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-uint8_t processCommand(char *command){
+uint8_t processCommand(){
+	HAL_Delay(500);
 
+
+	if(t_code[0] == 'E' && t_code[1] == 'N' && t_code[2] == 'D'){
+			END_flag =1;
+		}
+
+	t_code_index =0;
+
+//use tcode and tcode index to process the latest command
 }
 
+
 //checks if the last 6 bits in the buffer are ready?
-uint8_t checkReady(){
+uint8_t checkPCH(){
+
+	if(uart_buffer[read_ptr] == 'P' && uart_buffer[read_ptr+1] == 'C' && uart_buffer[read_ptr+2] == 'H'){
+		read_ptr +=3;
+		read_ptr %=BUFFER_SIZE;
+		PCH_flag =1;
+		return 1;
+	}else{return 0;}
+
 }
 
 
@@ -118,13 +142,49 @@ int main(void)
   while (1)
   {
 	   // HAL_Delay(1000);
-	    if(uart_buffer[0]){
-	    	HAL_UART_Transmit(&huart2, MCUH, 5, 10);
-	    }
 
 	  //wait for handshake until handshake received
+	  while(!PCH_flag){
+		  checkPCH();
+	  }
+
+	  HAL_UART_Transmit(&huart2, MCUHANDSHAKE, 5, 10);
 	  //after handshake, send mcu handshake until first part of command received
-	  //when newline received, process command
+
+	  //send ready_for_new_command
+	  HAL_UART_Transmit(&huart2, ready_for_new_command, 5, 10);
+	  while(!END_flag){
+		  if(read_ptr !=write_ptr){
+			  if(uart_buffer[read_ptr] == '\n' ||uart_buffer[read_ptr] == '\r'){
+				  read_ptr ++;
+				  read_ptr %= BUFFER_SIZE;
+				  processCommand();
+				  HAL_Delay(500);
+				  HAL_UART_Transmit(&huart2, ready_for_new_command, 5, 10);
+			  }else{
+
+				  t_code[t_code_index] = uart_buffer[read_ptr];
+				  t_code_index++;
+				  read_ptr ++;
+				  read_ptr %= BUFFER_SIZE;
+			  }
+		  }
+		  //check for new byte in uart_buffer
+		  //if it's not a newline, put add it to t_code
+		  //if it is a newline, call doCommand on it
+		  //then send ready_for_new_command
+
+		  //check for new input
+		  //if there is a new byte, form it onto
+
+
+	  }
+	  //wait for next command
+	  PCH_flag = 0;
+
+
+
+
 	  //when command processed, send ready_for_new_command once
 	  //repeat processing command and sending ready until end received
 	  //when end received, go back to waiting for handshake
