@@ -92,3 +92,7 @@ except serial.SerialException as e:
 
 # continually send pc handshake until mcu handshake received_data
 # when mcu handshake received, alternate between sending commands and waiting for ready
+
+
+# some notes:
+# all t code commands must be formatted exactly as in the spreadsheet, including spaces, but must also end with newlines

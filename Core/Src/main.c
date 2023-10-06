@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "command.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -52,9 +52,9 @@ uint8_t MCUHANDSHAKE[5] = "MCUH\n";
 uint8_t ready_for_new_command[5]= "MCUR\n";
 uint8_t PCH_flag =0;
 uint8_t END_flag =0;
-
 uint8_t t_code[16];
 uint8_t t_code_index;
+
 
 uint8_t uart_buffer[BUFFER_SIZE];
 volatile uint8_t read_ptr = 0;
@@ -74,18 +74,7 @@ static void MX_USART2_UART_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-uint8_t processCommand(){
-	HAL_Delay(500);
 
-
-	if(t_code[0] == 'E' && t_code[1] == 'N' && t_code[2] == 'D'){
-			END_flag =1;
-		}
-
-	t_code_index =0;
-
-//use tcode and tcode index to process the latest command
-}
 
 
 //checks if the last 6 bits in the buffer are ready?
@@ -142,7 +131,8 @@ int main(void)
   while (1)
   {
 	   // HAL_Delay(1000);
-
+	  uint8_t t_code[24];
+	  uint8_t t_code_index;
 	  //wait for handshake until handshake received
 	  while(!PCH_flag){
 		  checkPCH();
@@ -158,7 +148,9 @@ int main(void)
 			  if(uart_buffer[read_ptr] == '\n' ||uart_buffer[read_ptr] == '\r'){
 				  read_ptr ++;
 				  read_ptr %= BUFFER_SIZE;
-				  processCommand();
+				  const char* t_code_str = (const char*)t_code;
+				  processCommand(t_code_str,t_code_index);
+				  t_code_index =0;
 				  HAL_Delay(500);
 				  HAL_UART_Transmit(&huart2, ready_for_new_command, 5, 10);
 			  }else{
