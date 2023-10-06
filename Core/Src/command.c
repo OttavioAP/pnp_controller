@@ -9,6 +9,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdint.h>
+#include "stm32f4xx_hal.h" // Replace 'xxx' with your STM32 family
+
 
 uint8_t checkForStart(const char* t_code_str){
 	 if (strncmp(t_code_str, "M12", 3) == 0) {
@@ -109,6 +111,7 @@ uint8_t processCommand(const char* t_code_str){
     	uint8_t time;
 		sscanf(t_code_str, "M07 P%hhu", &time);
 		HAL_Delay(time);
+
         return 8;
     } else if (strncmp(t_code_str, "M08", 3) == 0) {
     	uint8_t reel;

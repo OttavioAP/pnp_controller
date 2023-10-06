@@ -153,6 +153,7 @@ int main(void)
 
 				  if(start_flag){
 					  uint8_t opcode = processCommand(t_code_str);
+
 					  if( opcode == 11 ||opcode == 12){
 						  END_flag = 1;
 					  }
@@ -167,7 +168,9 @@ int main(void)
 
 
 				  t_code_index =0;
-				  HAL_UART_Transmit(&huart2, ready_for_new_command, 5, 10);
+				  if(!END_flag){
+					  HAL_UART_Transmit(&huart2, ready_for_new_command, 5, 10);
+				  }
 			  }else{
 
 				  t_code[t_code_index] = uart_buffer[read_ptr];
