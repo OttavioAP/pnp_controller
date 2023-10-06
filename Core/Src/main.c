@@ -47,6 +47,9 @@ uint8_t rx_data;
 uint8_t rx_buffer[BUFFER_SIZE][16];
 uint8_t buffer_index;
 
+uint8_t ready[6] = "ready";
+uint8_t MCUH[5] = "MCUH\n";
+
 uint8_t uart_buffer[BUFFER_SIZE];
 volatile uint8_t read_ptr = 0;
 volatile uint8_t write_ptr = 0;
@@ -64,6 +67,15 @@ static void MX_USART2_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+uint8_t processCommand(char *command){
+
+}
+
+//checks if the last 6 bits in the buffer are ready?
+uint8_t checkReady(){
+}
+
 
 /* USER CODE END 0 */
 
@@ -105,8 +117,26 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	    HAL_Delay(1000);
+	  	HAL_UART_Transmit(&huart2, MCUH, 5, 10);
+	  //wait for handshake until handshake received
+	  //after handshake, send mcu handshake until first part of command received
+	  //when newline received, process command
+	  //when command processed, send ready_for_new_command once
+	  //repeat processing command and sending ready until end received
+	  //when end received, go back to waiting for handshake
+
+
+
+
     /* USER CODE END WHILE */
 
+
+
+
+
+	//  HAL_Delay(1000);
+	//  HAL_UART_Transmit(&huart2, ready, 6, 10);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
