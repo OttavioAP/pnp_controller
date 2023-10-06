@@ -9,7 +9,7 @@ mcu_ready_for_command = False
 
 PC_HANDSHAKE = "PCH".encode('utf-8')
 
-message_list = ["com1\n".encode('utf-8'), "com2\n".encode('utf-8'), "END\n".encode('utf-8')]
+message_list = ["M03\n".encode('utf-8'), "M04\n".encode('utf-8'), "M10\n".encode('utf-8')]
 
 
 
