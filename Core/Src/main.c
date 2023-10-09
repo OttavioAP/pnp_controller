@@ -170,6 +170,7 @@ int main(void)
 				  t_code_index =0;
 				  if(!END_flag){
 					  HAL_UART_Transmit(&huart2, ready_for_new_command, 5, 10);
+					  HAL_Delay(10); //added delay to hopefully avoid sending multiple MCU ready commands
 				  }
 			  }else{
 

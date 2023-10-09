@@ -7,8 +7,11 @@ baud_rate = 115200
 uart_handshake = False
 mcu_ready_for_command = False
 
+#PCH is sent to initate job before anything else. multiple jobs can be run without debugging
+#Can change this if needed, but needs to be changed in MCU code also
 PC_HANDSHAKE = "PCH".encode('utf-8')
 
+#all tcode commands must be carriage return terminated in order to be parsed correctly
 message_list = ["M12\n".encode('utf-8'),"M03\n".encode('utf-8'), "M04\n".encode('utf-8'), "M10\n".encode('utf-8')]
 
 
@@ -36,6 +39,7 @@ try:
             # Echo the received data
             print(decoded_data.strip())
 
+            #MCUH is MCU handshake, a response to the PCH handshake
             if(decoded_data == "MCUH\n"):
                 uart_handshake = True
         else:
