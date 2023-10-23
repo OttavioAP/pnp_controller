@@ -1,6 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
-# Toolchain: GNU Tools for STM32 (11.3.rel1)
+# Toolchain: GNU Tools for STM32 (10.3-2021.10)
 ################################################################################
 
 -include ../makefile.init
@@ -60,8 +60,8 @@ all: main-build
 main-build: pnp_controller.elf secondary-outputs
 
 # Tool invocations
-pnp_controller.elf pnp_controller.map: $(OBJS) $(USER_OBJS) C:\Users\ottav\STM32CubeIDE\workspace_1.13.2\pnp_controller\STM32F446RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "pnp_controller.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\ottav\STM32CubeIDE\workspace_1.13.2\pnp_controller\STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="pnp_controller.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+pnp_controller.elf pnp_controller.map: $(OBJS) $(USER_OBJS) E:\Senior\ Design\ Folder\pnp_controller\STM32F446RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "pnp_controller.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"E:\Senior Design Folder\pnp_controller\STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="pnp_controller.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
